@@ -282,7 +282,7 @@ const AdminDashboard = () => {
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card variant="outlined">
                     <CardContent>
-                      <Typography variant="h6">{item.name}</Typography>
+                      <Typography variant="h6">{item.product.name}</Typography>
                       <Typography variant="body2">Quantité: {item.quantity}</Typography>
                       <Typography variant="body2">Prix: ${item.price}</Typography>
                     </CardContent>

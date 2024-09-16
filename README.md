@@ -3,54 +3,54 @@
 EcommerceApp is a modern e-commerce application built using React, Node.js, Express, MySQL, Sequelize, and Material-UI. It provides users with the ability to browse products, manage their shopping cart, and place orders. The app also includes an admin panel for managing products, users, and orders.
 
 ## Screenshots
-
-![Sign Up](./screenshots/signup.png)
 *Sign-up page for new customers.*
+![Sign Up](./screenshots/signup.png)
 
-![Login](./screenshots/login.png)
 *Customer login page.*
+![Login](./screenshots/login.png)
 
-![Categories Grid View](./screenshots/categories1.png)
 *Categories displayed in a grid layout.*
+![Categories Grid View](./screenshots/categories1.png)
 
-![Categories List View](./screenshots/categories2.png)
 *Categories displayed in a list layout.*
+![Categories List View](./screenshots/categories2.png)
 
-![Products Grid View](./screenshots/products.png)
 *Grid view of available products.*
+![Products Grid View](./screenshots/products.png)
 
-![Products Filter Sidebar](./screenshots/products2.png)
 *Product grid with a filter sidebar.*
+![Products Filter Sidebar](./screenshots/products2.png)
 
-![Products List View](./screenshots/products3.png)
 *List view of available products.*
+![Products List View](./screenshots/products3.png)
 
-![Cart](./screenshots/orders1.png)
 *Shopping cart showing added items.*
+![Cart](./screenshots/orders1.png)
 
-![Invoice](./screenshots/orders2.png)
 *Order invoice view.*
+![Invoice](./screenshots/orders2.png)
 
-![Print Invoice](./screenshots/orders3.png)
 *Invoice printing page.*
+![Print Invoice](./screenshots/orders3.png)
 
-![Admin Login](./screenshots/adminLogin.png)
 *Admin login page.*
+![Admin Login](./screenshots/adminLogin.png)
 
-![Admin Dashboard](./screenshots/admin.png)
 *Admin dashboard for managing orders and products.*
+![Admin Dashboard](./screenshots/admin.png)
 
-![Orders List](./screenshots/commadedashboard1.png)
 *Admin dashboard showing a list of orders.*
+![Orders List](./screenshots/commadedashboard1.png)
 
-![Order Details](./screenshots/commandedashboard2.png)
 *Order details including user information.*
+![Order Details](./screenshots/commandedashboard2.png)
 
-![Product CRUD Operations](./screenshots/produitsadmin.png)
 *Admin performing CRUD operations on products.*
+![Product CRUD Operations](./screenshots/produitsadmin.png)
 
-![User Management](./screenshots/useradmin.png)
 *Admin performing CRUD operations on users.*
+![User Management](./screenshots/useradmin.png)
+
 
 ## Features
 

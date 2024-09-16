@@ -47,6 +47,7 @@ EcommerceApp is a modern e-commerce application built using React, Node.js, Expr
 
 *Admin performing CRUD operations on products.*
 ![Product CRUD Operations](./screenshots/produitsadmin.png)
+![Product CRUD Operations](./screenshots/produitsadmin2.png)
 
 *Admin performing CRUD operations on users.*
 ![User Management](./screenshots/useradmin.png)

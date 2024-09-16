@@ -25,13 +25,13 @@ EcommerceApp is a modern e-commerce application built using React, Node.js, Expr
 ![Products List View](./screenshots/products3.png)
 *List view of available products.*
 
-![Cart](./screenshots/order1.png)
+![Cart](./screenshots/orders1.png)
 *Shopping cart showing added items.*
 
-![Invoice](./screenshots/order2.png)
+![Invoice](./screenshots/orders2.png)
 *Order invoice view.*
 
-![Print Invoice](./screenshots/order3.png)
+![Print Invoice](./screenshots/orders3.png)
 *Invoice printing page.*
 
 ![Admin Login](./screenshots/adminLogin.png)

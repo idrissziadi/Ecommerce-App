@@ -72,10 +72,43 @@ EcommerceApp is a modern e-commerce application built using React, Node.js, Expr
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/idrissziadi/Ecommerce-App.git
-   cd EcommerceApp
-    cd backend
-    npm install
-    cd ../client
-    npm install
+git clone https://github.com/idrissziadi/Ecommerce-App.git
+cd EcommerceApp
+
+# Installation des dépendances backend
+cd backend
+npm install
+
+# Configuration de la base de données MySQL
+# Assurez-vous que MySQL est installé et en cours d'exécution.
+
+# 1. Créez la base de données MySQL
+# Ouvrez MySQL dans votre terminal et exécutez la commande suivante :
+mysql -u root -p
+CREATE DATABASE ecommerce_app;
+
+# 2. Créez un utilisateur MySQL pour cette base de données :
+CREATE USER 'ecommerce_user'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON ecommerce_app.* TO 'ecommerce_user'@'localhost';
+FLUSH PRIVILEGES;
+
+# 3. Configurez Sequelize pour se connecter à MySQL
+# Mettez à jour les informations de connexion dans le fichier backend/config/config.json :
+{
+  "development": {
+    "username": "ecommerce_user",
+    "password": "password",
+    "database": "ecommerce_app",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
+
+# 4. Lancez les migrations Sequelize pour générer les tables dans la base de données :
+npx sequelize-cli db:migrate
+
+# Installation des dépendances frontend
+cd ../client
+npm install
+
 

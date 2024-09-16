@@ -1,14 +1,6 @@
-// controllers/userController.js
-const User = require('../models/User');
+const { User } = require('../models/index');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const secret = process.env.JWT_SECRET;
-
-// Fonction pour obtenir les détails d'un utilisateur (Admin uniquement)
+// Get all users
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -18,83 +10,104 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// Fonction pour obtenir les détails d'un utilisateur spécifique (Admin ou utilisateur lui-même)
+// Get a user by ID
 const getUserById = async (req, res) => {
-  const userId = parseInt(req.params.id);
-
+  const { id } = req.params;
   try {
-    // Vérifier si l'utilisateur est un admin ou s'il demande ses propres détails
-    if (req.user.role === 'admin' || req.user.id === userId) {
-      const user = await User.findByPk(userId);
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Create a new user
+const createUser = async (req, res) => {
+    const { username, email, password, phone_number, user_type } = req.body;
+    try {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create the new user
+      const newUser = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+        phone_number,
+        user_type
+      });
+  
+      res.status(201).json(newUser);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+  };
+  
+  // Update a user
+  const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { username, email, password, phone_number, user_type } = req.body;
+    
+    try {
+      // Fetch existing user to check if user exists
+      const user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      res.json(user);
-    } else {
-      res.status(403).json({ message: 'Access denied' });
+  
+      // Prepare the updated data
+      const updatedData = {
+        username,
+        email,
+        phone_number,
+        user_type
+      };
+  
+      // Hash the new password if provided
+      if (password) {
+        updatedData.password = await bcrypt.hash(password, 10);
+      }
+  
+      // Update the user
+      const [updated] = await User.update(updatedData, {
+        where: { id },
+      });
+  
+      if (!updated) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Fetch the updated user
+      const updatedUser = await User.findByPk(id);
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-// Fonction pour modifier les détails d'un utilisateur (Utilisateur lui-même)
-const updateUser = async (req, res) => {
-  const userId = parseInt(req.params.id);
-
-  // Vérifier si l'utilisateur est authentifié et modifie ses propres informations
-  if (req.user.id !== userId) {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+  };
+  
+  // Delete a user
+  const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const deleted = await User.destroy({
+        where: { id },
+      });
+      if (!deleted) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
     }
-
-    if (email) {
-      user.email = email;
-    }
-
-    if (password) {
-      user.password = await bcrypt.hash(password, 10);
-    }
-
-    await user.save();
-    res.json({ message: 'User updated successfully', user });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-// Fonction pour supprimer un utilisateur (Utilisateur lui-même ou Admin)
-const deleteUser = async (req, res) => {
-  const userId = parseInt(req.params.id);
-
-  // Vérifier si l'utilisateur est authentifié et supprime son propre compte ou si c'est un admin
-  if (req.user.id !== userId && req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    await user.destroy();
-    res.json({ message: 'User deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
+  };
 
 module.exports = {
   getAllUsers,
   getUserById,
+  createUser,
   updateUser,
-  deleteUser,
+  deleteUser
 };

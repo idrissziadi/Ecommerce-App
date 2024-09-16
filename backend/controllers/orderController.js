@@ -8,15 +8,36 @@ const {   sequelize,
     Category,} = require('../models/index');
 // Récupérer toutes les commandes
 const getAllOrders = async (req, res) => {
-  try {
-    const orders = await Order.findAll({
-      include: [User] // Inclure les informations sur l'utilisateur
-    });
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
+    try {
+      const orders = await Order.findAll({
+        include: [
+          { 
+            model: User, 
+            as: 'user', // Utilisation de l'alias 'user' défini dans l'association
+            attributes: ['id', 'username', 'email' , 'phone_number' ] // Sélectionner les attributs pertinents
+          },
+          { 
+            model: OrderItem, 
+            as: 'orderItems', // Utilisation de l'alias 'orderItems' défini dans l'association
+            include: [
+              { 
+                model: Product, 
+                as: 'product', // Utilisation de l'alias 'product' défini dans l'association
+                attributes: ['id', 'name', 'price'] // Sélectionner les attributs pertinents pour le produit
+              }
+            ]
+          }
+        ]
+      });
+      res.json(orders);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des commandes:', error);
+      res.status(500).json({ message: 'Server error', error });
+    }
+  };
+  
+  
+  
 
 // Récupérer une commande par ID
 const getOrderById = async (req, res) => {
@@ -135,10 +156,35 @@ const deleteOrder = async (req, res) => {
   }
 };
 
+
+const updateOrderStatus = async (req, res) => {
+    const { status } = req.body; // Get the new status from the request
+    const orderId = req.params.id; // Get the order ID from the URL params
+  
+    try {
+      // Find the order by its primary key (ID)
+      const order = await Order.findByPk(orderId);
+  
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+  
+      // Update the status of the order
+      order.status = status;
+      await order.save();
+  
+      res.status(200).json({ message: 'Order status updated successfully', order });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to update order status' });
+    }
+  };
+  
 module.exports = {
   getAllOrders,
   getOrderById,
   createOrder,
   updateOrder,
   deleteOrder,
+  updateOrderStatus 
 };

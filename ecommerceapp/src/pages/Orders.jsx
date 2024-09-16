@@ -87,10 +87,10 @@ const Orders = () => {
               </Box>
               <Box>
                 <Typography variant="h6" align="right">Détails de la marque</Typography>
-                <Typography align="right">Marque XYZ</Typography>
-                <Typography align="right">Adresse de la marque</Typography>
-                <Typography align="right">Téléphone: 123-456-7890</Typography>
-                <Typography align="right">Email: contact@marque.xyz</Typography>
+                <Typography align="right">TechnoStore</Typography>
+                <Typography align="right">GHARDAIA</Typography>
+                <Typography align="right">Téléphone: 0791191717</Typography>
+                <Typography align="right">Email: idriss.ziadi47@gmail.com</Typography>
               </Box>
             </Box>
             <Divider />

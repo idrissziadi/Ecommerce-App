@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { Grid, Paper, TextField, Button, Typography, Link, CircularProgress } from '@mui/material';
+import { Grid, Paper, TextField, Button, Typography, Link, CircularProgress, Box, InputAdornment, IconButton } from '@mui/material';
 import { keyframes } from '@emotion/react';
 import { useTheme } from '@mui/material/styles';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import PhoneIcon from '@mui/icons-material/Phone';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import image from './../assets/back.jpg';
 
-// Animation pour le formulaire
+// Animation for the form
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -18,25 +24,26 @@ const fadeIn = keyframes`
 
 const SignupPage = () => {
   const theme = useTheme();
-
-  // États pour gérer les champs du formulaire et les messages
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     phone_number: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Gestion des changements dans les champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Validation du formulaire
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const validateForm = () => {
     if (!formData.username || !formData.email || !formData.password || !formData.phone_number) {
       setErrorMessage('Please fill out all fields.');
@@ -54,7 +61,6 @@ const SignupPage = () => {
     return true;
   };
 
-  // Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -72,18 +78,18 @@ const SignupPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage('Inscription réussie! Vous pouvez maintenant vous connecter.');
+        setSuccessMessage('Sign-up successful! You can now log in.');
         setErrorMessage('');
-        setFormData({ username: '', email: '', password: '', phone_number: '' }); // Réinitialiser le formulaire
+        setFormData({ username: '', email: '', password: '', phone_number: '' });
         setTimeout(() => {
-          window.location.href = '/login'; // Redirection vers la page de connexion
+          window.location.href = '/login';
         }, 1000);
       } else {
-        setErrorMessage(data.message || 'Erreur lors de l\'inscription.');
+        setErrorMessage(data.message || 'Error signing up.');
         setSuccessMessage('');
       }
     } catch (error) {
-      setErrorMessage('Erreur du serveur. Veuillez réessayer plus tard.');
+      setErrorMessage('Server error. Please try again later.');
       setSuccessMessage('');
     } finally {
       setLoading(false);
@@ -108,7 +114,7 @@ const SignupPage = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: 3,
+            padding: 4,
             borderRadius: 2,
             animation: `${fadeIn} 0.5s ease-in-out`,
             backgroundColor: theme.palette.background.paper,
@@ -118,8 +124,11 @@ const SignupPage = () => {
           <Typography variant="h4" align="center" gutterBottom>
             Sign Up
           </Typography>
+          <Typography variant="subtitle1" align="center" color="textSecondary" sx={{ marginBottom: 3 }}>
+            Please fill in the form to create your account
+          </Typography>
           {errorMessage && <Typography color="error" align="center" sx={{ marginBottom: 2 }}>{errorMessage}</Typography>}
-          {successMessage && <Typography color="success" align="center" sx={{ marginBottom: 2 }}>{successMessage}</Typography>}
+          {successMessage && <Typography color="success.main" align="center" sx={{ marginBottom: 2 }}>{successMessage}</Typography>}
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -131,6 +140,13 @@ const SignupPage = () => {
               value={formData.username}
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               fullWidth
@@ -143,6 +159,13 @@ const SignupPage = () => {
               value={formData.email}
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               fullWidth
@@ -151,10 +174,28 @@ const SignupPage = () => {
               name="password"
               margin="normal"
               required
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               fullWidth
@@ -166,6 +207,13 @@ const SignupPage = () => {
               value={formData.phone_number}
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button
               fullWidth

@@ -4,7 +4,10 @@ import { keyframes } from '@emotion/react';
 import { useTheme } from '@mui/material/styles';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import back from './../assets/back.jpg'
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import back from './../assets/back.jpg';
+
 // Animation for the form
 const fadeIn = keyframes`
   from {
@@ -45,24 +48,36 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(data.user)); // Stocker les informations de l'utilisateur
-        localStorage.setItem('token', data.token); // Stocker le token JWT
-        setSuccess('Login successful!');
-        setError('');
-        setTimeout(() => {
-          window.location.href = '/'; // Utiliser window.location.href pour la redirection
-        }, 1000);
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
+        localStorage.setItem('token', data.token); // Store JWT token
+  
+        // Check the user's role and redirect accordingly
+        const userRole = data.user.role; // Assuming the role is stored in data.user.role
+  
+        if (userRole === 'admin') {
+          setSuccess('Login successful! Redirecting to Admin Dashboard...');
+          setError('');
+          setTimeout(() => {
+            window.location.href = '/admin-dashboard'; // Redirect admin to admin dashboard
+          }, 1000);
+        } else {
+          setSuccess('Login successful! Redirecting to Home...');
+          setError('');
+          setTimeout(() => {
+            window.location.href = '/'; // Redirect other users to the home page
+          }, 1000);
+        }
       } else {
         setError(data.message || 'Invalid email or password.');
         setSuccess('');
@@ -74,6 +89,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Grid
@@ -82,11 +98,11 @@ const LoginPage = () => {
       alignItems="center"
       justifyContent="center"
       sx={{
-        backgroundImage: `url(${back})`, // Utiliser l'image comme fond
-        backgroundSize: 'cover', // Couvrir tout l'arrière-plan
-        backgroundPosition: 'center', // Centrer l'image
+        backgroundImage: `url(${back})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         animation: `${fadeIn} 0.5s ease-in-out`,
-        overflow: 'hidden', // Empêcher le défilement pour garder l'image intacte
+        overflow: 'hidden',
       }}
     >
       <Grid item xs={12} sm={8} md={4}>
@@ -104,6 +120,9 @@ const LoginPage = () => {
           <Typography variant="h4" gutterBottom color={theme.palette.primary.main}>
             Login
           </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Please enter your email and password to login.
+          </Typography>
           {error && <Typography color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
           {success && <Typography color="success.main" sx={{ marginBottom: 2 }}>{success}</Typography>}
           <form onSubmit={handleSubmit}>
@@ -118,6 +137,13 @@ const LoginPage = () => {
               value={formData.email}
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               fullWidth
@@ -131,6 +157,11 @@ const LoginPage = () => {
               onChange={handleChange}
               sx={{ marginBottom: 2 }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton

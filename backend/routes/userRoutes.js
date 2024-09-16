@@ -1,19 +1,13 @@
-// routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
 const { authenticateToken, authorizeAdmin } = require('../middlewares/authMiddleware');
 const userController = require('../controllers/userController');
 
-// Route pour obtenir tous les utilisateurs (Admin uniquement)
-router.get('/', authenticateToken, authorizeAdmin, userController.getAllUsers);
-
-// Route pour obtenir les détails d'un utilisateur spécifique (Admin ou utilisateur lui-même)
-router.get('/:id', authenticateToken, userController.getUserById);
-
-// Route pour mettre à jour les détails d'un utilisateur (Utilisateur lui-même)
-router.put('/:id', authenticateToken, userController.updateUser);
-
-// Route pour supprimer un utilisateur (Utilisateur lui-même ou Admin)
-router.delete('/:id', authenticateToken, userController.deleteUser);
+// Routes for users
+router.get('/', authenticateToken, authorizeAdmin, userController.getAllUsers); // Get all users
+router.get('/:id', authenticateToken, authorizeAdmin, userController.getUserById); // Get a user by ID
+router.post('/', authenticateToken, authorizeAdmin, userController.createUser); // Create a new user
+router.put('/:id', authenticateToken, authorizeAdmin, userController.updateUser); // Update a user
+router.delete('/:id', authenticateToken, authorizeAdmin, userController.deleteUser); // Delete a user
 
 module.exports = router;
